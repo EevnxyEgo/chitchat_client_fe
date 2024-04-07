@@ -1,11 +1,19 @@
-import { ArrowIcon, ChatIcon } from "./svg";
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/login';
+import Register from './pages/register';
+
 
 function App() {
   return (
-    <div className="App">
-      <h1>Welcome my friend</h1>
-      <ChatIcon className="red"/>
-      <ArrowIcon/>
+    <div className='dark'>
+      <Router>
+        <Routes>
+          <Route exact path='/' element={<Home />} />
+          <Route exact path='/login' element={<Login />} />
+          <Route exact path='/register' element={<Register />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
