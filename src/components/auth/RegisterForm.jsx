@@ -6,25 +6,60 @@ import { useDispatch, useSelector } from "react-redux";
 import { PulseLoader } from "react-spinners";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/style.css"
-import { registerUser } from "../../features/userSlice.js";
+import { changeStatus, registerUser } from "../../features/userSlice.js";
+import { useState } from "react";
+import Picture from "./Picture.jsx";
+import axios from "axios";
+
+const cloud_secret= process.env.REACT_APP_CLOUD_SECRET;
+const cloud_name= process.env.REACT_APP_CLOUD_NAME;
 
 export default function RegisterForm() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { status, error } = useSelector((state) => state.user);
+    const [ picture, setPicture ] = useState();
+    const [readablePicture,setReadablePicture] = useState()
     const { register, handleSubmit, watch, formState: { errors } } = useForm({
         resolver: yupResolver(signUpSchema),
     });
     const onSubmit = async(data) => {
-        let res = await dispatch(registerUser({...data, picture: ""}))
-        console.log(res);
-        if(res.payload.user){
-        navigate("/");
+        let res;
+        dispatch(changeStatus("loading"));
+        if(picture){
+            await uploadImage().then(async(respon)=>{
+                res = await dispatch(
+                    registerUser({...data, picture: respon.secure_url})
+                );
+                if(res?.payload?.user){
+                    navigate("/");
+                    }
+            });
+        }else{
+            res = await dispatch(registerUser({...data, picture: ""}));
+            //console.log(res); 
+            if(res?.payload?.user){
+                navigate("/");
+                }
         }
+        
+        
+    };
+    const uploadImage = async()=>{
+        let formData = new FormData();
+        formData.append('upload_preset', cloud_secret);
+        formData.append('file', picture);
+        console.log(formData);
+        const {data} = await axios.post(
+            `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
+        formData
+        );
+        console.log(data);
+        return data;
     };
     //console.log("values", watch());
     //console.log("errors", errors);
-
+    //console.log(picture,readablePicture);
     return (
         <div className="h-screen w-full flex items-center justify-center overflow-hidden bg-gray-100 dark:bg-dark_bg_1">
             <div className="abstract-1"></div>
@@ -41,6 +76,10 @@ export default function RegisterForm() {
                     </p>  
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                    <Picture 
+                    readablePicture={readablePicture} 
+                    setReadablePicture={setReadablePicture}
+                    setPicture = {setPicture}/>
                     <AuthInput
                         name="name"
                         type="text"
@@ -69,6 +108,7 @@ export default function RegisterForm() {
                         register={register}
                         error={errors?.password?.message}
                     />
+                    
                     {
                         error ? (
                         <div>

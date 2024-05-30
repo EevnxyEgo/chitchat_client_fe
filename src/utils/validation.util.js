@@ -3,9 +3,9 @@ import * as yup from "yup"
 export const signUpSchema=yup.object({
     name:yup.string()
     .required('name is required')
-    .matches(/^[a-zA-Z_ ]*$/, "No special characters allowed")
-    .min(2,"name must be between 2 and 16 characters long")
-    .max(20,"name must be between 2 and 16 characters long"),
+    .matches(/^[Aa-z-Z_ ]*$/, "No special characters allowed")
+    .min(2,"name must be between 2 and 20 characters long")
+    .max(20,"name must be between 2 and 20 characters long"),
     email:yup.string()
     .required('email address is required')
     .email("invalid email address"),

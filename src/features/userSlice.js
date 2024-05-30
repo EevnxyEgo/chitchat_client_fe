@@ -41,6 +41,9 @@ export const userSlice= createSlice({
                 token:"",
             };
         },
+        changeStatus:(state,action)=>{
+            state.status = action.payload;
+        }
     },
     extraReducers(builder){
         builder
@@ -60,6 +63,7 @@ export const userSlice= createSlice({
         })
         .addCase(loginUser.fulfilled,(state,action)=>{
             state.status="succeeded";
+            state.error="";
             state.user= action.payload.user;
         })
         .addCase(loginUser.rejected,(state,action)=>{
@@ -78,6 +82,6 @@ export const loginUser=createAsyncThunk('auth/login', async(values,{rejectWithVa
     }
 })
 
-export const {logout}=userSlice.actions;
+export const {logout, changeStatus}=userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,12 +1,22 @@
-function SendIcon({ className }) {
+// icon:send | Feathericons https://feathericons.com/ | Cole Bemis
+import * as React from "react";
+
+function IconSend(props) {
   return (
-    <svg width="24" height="24" x="0" y="0" viewBox="0 0 24 24">
-      <path
-        className={className}
-        d="M1.101 21.757L23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"
-      ></path>
+    <svg
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      viewBox="0 0 24 24"
+      height="1em"
+      width="1em"
+      {...props}
+    >
+      <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
     </svg>
   );
 }
 
-export default SendIcon;
+export default IconSend;
